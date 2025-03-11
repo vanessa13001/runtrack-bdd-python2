@@ -6,7 +6,8 @@ class Zoo:
             host="localhost",
             user="root",
             password="Parfait1313",
-            database="zoo"
+            database="zoo",
+            charset="utf8mb4"  # Ajout du charset pour éviter les problèmes d'encodage
         )
         self.cursor = self.mydb.cursor()
 
@@ -21,10 +22,27 @@ class Zoo:
         self.mydb.commit()
 
     def ajouter_animal(self, nom, race, id_cage, date_naissance, pays_origine):
-        query = "INSERT INTO animal (nom, race, id_cage, date_naissance, pays_origine) VALUES (%s, %s, %s, %s, %s)"
-        values = (nom, race, id_cage, date_naissance, pays_origine)
-        self.cursor.execute(query, values)
-        self.mydb.commit()
+        try:
+            # Validation que le pays d'origine n'est pas vide
+            pays_origine = pays_origine.strip()
+            if not pays_origine:
+                print("Le pays d'origine ne peut pas être vide.")
+                return
+
+            # Vérifier si l'ID de la cage existe
+            self.cursor.execute("SELECT id FROM cage WHERE id = %s", (id_cage,))
+            result = self.cursor.fetchone()
+            if result is None:
+                print(f"L'ID de la cage {id_cage} n'existe pas dans la base de données.")
+                return
+
+            query = "INSERT INTO animal (nom, race, id_cage, date_naissance, pays_origine) VALUES (%s, %s, %s, %s, %s)"
+            values = (nom, race, id_cage, date_naissance, pays_origine)
+            self.cursor.execute(query, values)
+            self.mydb.commit()
+            print("Animal ajouté avec succès!")
+        except mysql.connector.Error as err:
+            print(f"Erreur lors de l'ajout de l'animal: {err}")
 
     def supprimer_animal(self, id_animal):
         query = "DELETE FROM animal WHERE id = %s"
@@ -40,7 +58,7 @@ class Zoo:
         query = "SELECT a.id, a.nom, a.race, c.superficie, c.capacite_max FROM animal a JOIN cage c ON a.id_cage = c.id"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        print("liste des animaux présents dans le zoo :")
+        print("Liste des animaux présents dans le zoo :")
         for row in result:
             print(f"ID: {row[0]}, Nom: {row[1]}, Race: {row[2]}, Cage Superficie: {row[3]} m², Capacité Max: {row[4]}")
 
@@ -52,7 +70,7 @@ class Zoo:
         """
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        print("liste des animaux dans chaque cage :")
+        print("Liste des animaux dans chaque cage :")
         for row in result:
             if row[2]:  # Si un animal est présent dans la cage
                 print(f"Cage ID: {row[0]}, Superficie: {row[1]} m², Animal: {row[2]} ({row[3]})")
@@ -63,32 +81,32 @@ class Zoo:
         query = "SELECT SUM(superficie) FROM cage"
         self.cursor.execute(query)
         result = self.cursor.fetchone()
-        print(f"la superficie totale de toutes les cages est de {result[0]} m².")
+        print(f"La superficie totale de toutes les cages est de {result[0]} m².")
 
     def menu(self):
         while True:
-            print("\nmenu du zoo :")
-            print("1. ajouter un animal")
-            print("2. ajouter une cage")
-            print("3. supprimer un animal")
-            print("4. supprimer une cage")
-            print("5. afficher les animaux")
-            print("6. afficher les animaux par cage")
-            print("7. calculer la superficie totale des cages")
-            print("8. quitter")
+            print("\nMenu du zoo :")
+            print("1. Ajouter un animal")
+            print("2. Ajouter une cage")
+            print("3. Supprimer un animal")
+            print("4. Supprimer une cage")
+            print("5. Afficher les animaux")
+            print("6. Afficher les animaux par cage")
+            print("7. Calculer la superficie totale des cages")
+            print("8. Quitter")
 
-            choix = input("que voulez-vous faire ? (1-8): ")
+            choix = input("Que voulez-vous faire ? (1-8): ")
 
             if choix == '1':
-                nom = input("nom de l'animal : ")
-                race = input("race de l'animal : ")
+                nom = input("Nom de l'animal : ")
+                race = input("Race de l'animal : ")
                 id_cage = int(input("ID de la cage : "))
-                date_naissance = input("date de naissance (YYYY-MM-DD) : ")
-                pays_origine = input("pays d'origine de l'animal : ")
+                date_naissance = input("Date de naissance (YYYY-MM-DD) : ")
+                pays_origine = input("Pays d'origine de l'animal : ")
                 self.ajouter_animal(nom, race, id_cage, date_naissance, pays_origine)
             elif choix == '2':
-                superficie = int(input("superficie de la cage (en m²) : "))
-                capacite_max = int(input("capacité maximale de la cage : "))
+                superficie = int(input("Superficie de la cage (en m²) : "))
+                capacite_max = int(input("Capacité maximale de la cage : "))
                 self.ajouter_cage(superficie, capacite_max)
             elif choix == '3':
                 id_animal = int(input("ID de l'animal à supprimer : "))
@@ -103,10 +121,10 @@ class Zoo:
             elif choix == '7':
                 self.superficie_totale_cages()
             elif choix == '8':
-                print("au revoir !")
+                print("Au revoir !")
                 break
             else:
-                print("choix invalide, veuillez entrer un numéro entre 1 et 8.")
+                print("Choix invalide, veuillez entrer un numéro entre 1 et 8.")
 
 # Exemple d'utilisation
 zoo = Zoo()
