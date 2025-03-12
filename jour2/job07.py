@@ -26,6 +26,7 @@ class Employe:
     Read
     Update
     Delete
+    le CRUD résume les fonctions qu'un utilisateur a besoin d'utiliser pour créer et gérer des données
     '''
 
     # create - ajouter un employé
