@@ -45,6 +45,7 @@ class Zoo:
             print(f"Erreur lors de l'ajout de l'animal: {err}")
 
     def supprimer_animal(self, id_animal):
+        '''query est une chaîne de caractères qui stocke la requête SQL avant son exécution'''
         query = "DELETE FROM animal WHERE id = %s"
         self.cursor.execute(query, (id_animal,))
         self.mydb.commit()
@@ -78,6 +79,7 @@ class Zoo:
                 print(f"Cage ID: {row[0]}, Superficie: {row[1]} m², Cage vide")
 
     def superficie_totale_cages(self):
+        ''' La fonction SUM calcule la somme totale des valeurs dans la colonne superficie.'''
         query = "SELECT SUM(superficie) FROM cage"
         self.cursor.execute(query)
         result = self.cursor.fetchone()
@@ -126,7 +128,7 @@ class Zoo:
             else:
                 print("Choix invalide, veuillez entrer un numéro entre 1 et 8.")
 
-# Exemple d'utilisation
+
 zoo = Zoo()
 zoo.menu()
 zoo.fermer_connexion()

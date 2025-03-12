@@ -12,10 +12,10 @@ if mydb.is_connected():
     db_info = mydb.get_server_info()
     print(f"Connecté à MySQL, version : {db_info}")
 
-# création du curseur pour exécuter des requêtes SQL
+# exécuter des requêtes SQL
 cursor = mydb.cursor()
 
-# exécution de la requête pour calculer la superficie totale des étages
+# requête pour calculer la superficie totale des étage
 cursor.execute("SELECT SUM(superficie) FROM etage")
 
 # récuperer le résultat

@@ -21,16 +21,28 @@ class Employe:
         self.cursor.close()
         self.mydb.close()
 
+    '''CRUD est un acronyme des noms des quatre opérations de base de la gestion de la persistance des données et applications 
+    Create
+    Read
+    Update
+    Delete
+    '''
+
     # create - ajouter un employé
     def ajouter_employe(self):
         query = "INSERT INTO employe (nom, prenom, salaire, id_service) VALUES (%s, %s, %s, %s)"
         values = (self.nom, self.prenom, self.salaire, self.id_service)
         self.cursor.execute(query, values)
-        self.mydb.commit()
+        self.mydb.commit() # commit validation des modifications
 
     # read - récupérer tous les employés
     def afficher_employes(self):
+        '''e.id, e.nom, e.prenom, e.salaire => Colonnes de la table employe (raccourcie en e).'''
+    
         self.cursor.execute("SELECT e.id, e.nom, e.prenom, e.salaire, s.nom AS service FROM employe e JOIN service s ON e.id_service = s.id")
+
+        '''s.nom AS service => Colonne nom de la table service (raccourcie en s), renommée service dans les résultats.'''
+
         result = self.cursor.fetchall()
         for row in result:
             print(f"ID: {row[0]}, Nom: {row[1]}, Prénom: {row[2]}, Salaire: {row[3]} €, Service: {row[4]}")
@@ -42,7 +54,6 @@ class Employe:
         self.cursor.execute(query, values)
         self.mydb.commit()
 
-    # supprimer un employé
     def supprimer_employe(self):
         query = "DELETE FROM employe WHERE id = %s"
         self.cursor.execute(query, (self.id,))
@@ -61,13 +72,13 @@ employe1.prenom = "Jean-Paul"
 employe1.salaire = 4000
 employe1.mettre_a_jour_employe()
 
-# afficher les employés après mise à jour
+
 employe1.afficher_employes()
 
-# supprimer un employé
+
 employe1.supprimer_employe()
 
-# afficher les employés après suppression
+
 employe1.afficher_employes()
 
 employe1.fermer_connexion()

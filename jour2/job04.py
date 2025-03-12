@@ -1,6 +1,6 @@
 import mysql.connector
 
-# Connexion à la base de données
+
 mydb = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -12,14 +12,16 @@ if mydb.is_connected():
     db_info = mydb.get_server_info()
     print(f"Connecté à MySQL, version : {db_info}")
 
-# création du curseur pour exécuter des requêtes SQL
+
 cursor = mydb.cursor()
+'''créer le curseur pour exécuter des requêtes SQL'''
 
-# exécution de la requête pour récupérer les noms et capacités de la table "salle"
 cursor.execute("SELECT nom, capacite FROM salle")
+'''exécution de la requête pour récupérer les noms et capacités de la table "salle"'''
 
-# récuperer les resultats
-salles = cursor.fetchall()
+
+salles = cursor.fetchall() 
+''' la méthode fetchall récupère tous les résultats de la requête sous forme de liste de tuples'''
 
 # afficher les résultats
 print(" Liste des salles et leurs capacités :")
