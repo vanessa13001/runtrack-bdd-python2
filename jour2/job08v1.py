@@ -1,14 +1,16 @@
 import mysql.connector
 
 class Zoo:
+    '''l'option ( fonction)  charset spécifie le jeu de caractères utilisé pour l'encodage des données échangées entre le client (ton script Python) et la base de données'''
     def __init__(self):
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="Parfait1313",
+            password="",
             database="zoo",
-            charset="utf8mb4"  # Ajout du charset pour éviter les problèmes d'encodage
+            charset="utf8mb4"  # charset pour éviter les problèmes d'encodage
         )
+        '''mon charset=utf8mb4, signifie que la connexion utilisera UTF-8 en 4 octets, c'est une version améliorée de UTF-8 permettant de stocker des caractères spéciaux comme les emojis et certains caractères asiatiques'''
         self.cursor = self.mydb.cursor()
 
     def fermer_connexion(self):
