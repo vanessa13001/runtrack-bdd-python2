@@ -6,7 +6,7 @@ class Zoo:
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Parfait1313",
             database="zoo",
             charset="utf8mb4"  # charset pour éviter les problèmes d'encodage
         )
@@ -25,13 +25,13 @@ class Zoo:
 
     def ajouter_animal(self, nom, race, id_cage, date_naissance, pays_origine):
         try:
-            # Validation que le pays d'origine n'est pas vide
+            # on valide que le pays d'origine n'est pas vide
             pays_origine = pays_origine.strip()
             if not pays_origine:
                 print("Le pays d'origine ne peut pas être vide.")
                 return
 
-            # Vérifier si l'ID de la cage existe
+            # on verifie si l'id de la cage existe
             self.cursor.execute("SELECT id FROM cage WHERE id = %s", (id_cage,))
             result = self.cursor.fetchone()
             if result is None:
@@ -48,6 +48,7 @@ class Zoo:
 
     def supprimer_animal(self, id_animal):
         '''query est une chaîne de caractères qui stocke la requête SQL avant son exécution'''
+
         query = "DELETE FROM animal WHERE id = %s"
         self.cursor.execute(query, (id_animal,))
         self.mydb.commit()
@@ -75,7 +76,7 @@ class Zoo:
         result = self.cursor.fetchall()
         print("Liste des animaux dans chaque cage :")
         for row in result:
-            if row[2]:  # Si un animal est présent dans la cage
+            if row[2]:  # si un animal est présent dans la cage
                 print(f"Cage ID: {row[0]}, Superficie: {row[1]} m², Animal: {row[2]} ({row[3]})")
             else:
                 print(f"Cage ID: {row[0]}, Superficie: {row[1]} m², Cage vide")

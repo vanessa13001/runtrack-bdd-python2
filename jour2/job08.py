@@ -41,7 +41,7 @@ zoo.ajouter_cage(100, 5)
 zoo.ajouter_cage(150, 10)
 
 # ajouter des animaux
-zoo.ajouter_animal("Lion", "Panthera leo", 1, "2015-08-01", "Afrique")
+zoo.ajouter_animal("Lion", "félin  lion", 1, "2015-08-01", "Afrique")
 zoo.ajouter_animal("Elephant", "Loxodonta", 2, "2010-04-15", "Afrique")
 
 # afficher les animaux et leur cage
